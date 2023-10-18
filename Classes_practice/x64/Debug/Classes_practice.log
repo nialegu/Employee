@@ -1,2 +1,3 @@
-﻿  classes_practice.cpp
-  Classes_practice.vcxproj -> C:\Users\Leonid\Projects\Employee\x64\Debug\Classes_practice.exe
+﻿C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(531,5): warning MSB8028: промежуточный каталог (x64\Debug\) содержит файлы, которые используются совместно с другим проектом (Classes_practice.vcxproj).  Это может привести к ошибкам очистки и перестроения.
+  main.cpp
+  Classes_practice.vcxproj -> C:\Users\Leonid\Projects\Employee\x64\Debug\Employee.exe

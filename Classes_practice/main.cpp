@@ -12,22 +12,22 @@ void one_line();
 void two_lines();
 int count_of_employees = 0;
 
-enum etype { laborer, secretary, manager, accountant, executive, researcher };
-
-ostream& operator<<(ostream& out, const etype value) {
-	static map <etype, string> strings;
-	if (strings.size() == 0) {
-#define INSERT_ELEMENT(p) strings[p] = #p
-		INSERT_ELEMENT(laborer);
-		INSERT_ELEMENT(secretary);
-		INSERT_ELEMENT(manager);
-		INSERT_ELEMENT(accountant);
-		INSERT_ELEMENT(executive);
-		INSERT_ELEMENT(researcher);
-#undef  INSERT_ELEMENT
-	}
-	return out << strings[value];
-}
+//enum etype { laborer, secretary, manager, accountant, executive, researcher };
+//
+//ostream& operator<<(ostream& out, const etype value) {
+//	static map <etype, string> strings;
+//	if (strings.size() == 0) {
+//#define INSERT_ELEMENT(p) strings[p] = #p
+//		INSERT_ELEMENT(laborer);
+//		INSERT_ELEMENT(secretary);
+//		INSERT_ELEMENT(manager);
+//		INSERT_ELEMENT(accountant);
+//		INSERT_ELEMENT(executive);
+//		INSERT_ELEMENT(researcher);
+//#undef  INSERT_ELEMENT
+//	}
+//	return out << strings[value];
+//}
 
 class student {
 private:
@@ -59,7 +59,7 @@ private:
 	char name[LEN];
 	float salary;
 	date date_start;
-	etype post;
+	//etype post;
 public:
 	employee(): number(0), salary(0) {}
 	employee(int n, float s): number(n), salary(s) {}
@@ -67,85 +67,125 @@ public:
 	void put_data()const; 
 };
 
-class _manager : private employee, private student {
+enum periods { hourly, weekly, monthly };
+
+class employee2 {
+private:
+	double compensation;
+	periods period;
+public:
+	void getdata() {
+		cout << "Compensation: "; cin >> compensation;
+		cout << "Period (h, w, m): "; 
+		char ch; ch = _getche(); cout << endl;
+		switch (ch) {
+		case 'h': period = hourly; break;
+		case 'w': period = weekly; break;
+		case 'm': period = monthly; break;
+		}
+	}
+	void putdata() {
+		cout << "Compensation: " << compensation << endl;
+		cout << "Period: ";
+		switch (period) {
+		case hourly: cout << "hourly" << endl; break;
+		case weekly: cout << "weekly" << endl; break;
+		case monthly: cout << "monthly" << endl; break;
+		default: cout << "unknown" << endl; break;
+		}
+	}
+};
+
+class manager : private employee, private student, public employee2 {
 private:
 	char title[LEN];
 	double dues;
 public:
 	void get_data() {
 		employee::get_data();
+		employee2::getdata();
 		cout << "Enter the manager's title: "; cin.ignore(); cin >> title;
 		cout << "Enter the sum of dues to the golf club: "; cin >> dues;
 		student::get_edu();
-		one_line();
+		//one_line();
 	}
 	void put_data() {
 		employee::put_data();
+		employee2::putdata();
 		cout << "Title: " << title << endl;
 		cout << "Sum of dues: " << dues << endl;
 		student::put_edu();
 	}
 };
 
-class scientist : private employee, private student {
+class executive : public manager {
+private:
+	float annual_bonus;
+	unsigned int shares_amount;
+public:
+	void getdata() {
+		manager::get_data();
+		cout << "Annual bonus: "; cin >> annual_bonus;
+		cout << "Amount of company shares: "; cin >> shares_amount;
+	}
+	void putdata() {
+		manager::put_data();
+		cout << "Annual bonus: " << annual_bonus << endl;
+		cout << "Amount of company shares: " << shares_amount << endl;
+	}
+};
+
+class scientist : private employee, private student, public employee2 {
 private:
 	int pubs;
 public:
 	void get_data() {
 		employee::get_data();
+		employee2::getdata();
 		cout << "Enter a count of publications: "; cin >> pubs;
 		student::get_edu();
 		one_line();
 	}
 	void put_data() {
 		employee::put_data();
+		employee2::putdata();
 		cout << "Count of publications: " << pubs << endl;
 		student::put_edu();
 	}
 };
 
-class _laborer : public employee {
+class laborer : public employee {
 	//		========D
 	//	-(.)(.)-             it's a gun u know
 };
 
-class foreman : public _laborer {
+class foreman : public laborer, public employee2 {
 private:
 	float quotas;
 public:
 	void get_data() {
-		_laborer::get_data();
+		laborer::get_data();
+		employee2::getdata();
 		cout << "Enter a qoutas: "; cin >> quotas;
 	}
 	void put_data() {
-		_laborer::put_data();
+		laborer::put_data();
+		employee2::putdata();
 		cout << "Standard: " << quotas;
 	}
 };
 
 /////////////////////////////////////////////////////////////////////////////////////////
-
 int main() {
-	_manager m1;
+	manager m1;
 	scientist s1;
-	_laborer l1;
+	laborer l1;
 	foreman f1;
-	//f1.get_data();
-	m1.get_data();
-	//s1.get_data();
-	//l1.get_data();
-	//f1.put_data();
-	m1.put_data();
-	//s1.put_data();
-	//l1.put_data();
+	executive e1;
 
-	//employee e1, e2, e3;
-	//e1.get_data();
-	//e2.add_emp();
-	//e3.add_emp();
-	//e1.put_data();
-	//e2.show_emp();
-	//e3.show_emp();
+	e1.getdata();
+	e1.putdata();
+	
 	return 0;
 }
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -160,7 +200,7 @@ void employee::get_data() {
 	cin >> salary;
 	cout << "Enter the employee " << count_of_employees << " start day ";
 	date_start.get_date();
-	cout << "Enter the employee " << count_of_employees << " post's first letter: ";
+	/*cout << "Enter the employee " << count_of_employees << " post's first letter: ";
 	char first_letter, check=0;
 	do {
 		first_letter = _getche();
@@ -174,7 +214,7 @@ void employee::get_data() {
 		default: cout << "\nIncorrect letter! Try again."; break;
 		}
 		cout << endl;
-	} while (check != 1);
+	} while (check != 1);*/
 	//one_line();
 }
 
@@ -184,7 +224,7 @@ void employee::put_data()const {
 	cout << "Name: " << name << endl;
 	cout << "Salary: " << salary << " $" << endl;
 	cout << "Start date: "; date_start.show_date(); cout << endl;
-	cout << "Post: " << post << endl;
+	//cout << "Post: " << post << endl;
 	//two_lines();
 }
 
